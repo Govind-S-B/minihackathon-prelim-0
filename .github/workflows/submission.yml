@@ -1,0 +1,40 @@
+name: Submission Workflow
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+
+    - name: Get username
+      id: username
+      run: echo "::set-output name=username::${{ github.actor }}"
+
+    - name: Run tests and capture output
+      run: |
+        cd "${{ steps.username.outputs.username }}"
+        output=$(python -m unittest odd_doubler_test.py 2>&1)
+        echo "$output" > test_output.txt
+        if echo "$output" | grep -q "OK"; then
+          echo "Tests executed successfully."
+          exit 0
+        else
+          echo "Tests failed."
+          exit 1
+        fi
+
+    - name: Upload test output
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-output
+        path: "${{ steps.username.outputs.username }}/test_output.txt"
