@@ -6,7 +6,7 @@ def odd_doubler(list1):
 
     # example :
     # input -> [1, 2, 3, 4, 5]
-    # output -> [2, 2, 6, 4, 10]
+    # output -> [2, 2, 6, 4, 10] .
     # """
     n = len(list1)
     for i in range(n) :
